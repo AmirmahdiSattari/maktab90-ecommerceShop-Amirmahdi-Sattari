@@ -9,19 +9,20 @@ import {
 import './App.scss';
 
 //components
-import { Header, Footer } from './components';
 
 //pages
 import { Home, Contact, Checkout, Cart } from './pages';
 
+//layout
+import { Header, Footer } from './layout'
 
 function App() {
 
   return (
-    <>
-
+    <div className='w-full h-screen bg-[#212121] overflow-x-hidden'>
+      <Header></Header>
       <BrowserRouter>
-        <Header />
+
         <Routes>
 
           <Route path="/" element={<Home />} />
@@ -32,10 +33,11 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
 
         </Routes>
-        <Footer />
-      </BrowserRouter>
 
-    </>
+      </BrowserRouter>
+      <Footer className="bottom-0"></Footer>
+
+    </div>
 
   );
 }
