@@ -1,44 +1,29 @@
-import React from 'react';
-
-import {
-  BrowserRouter,
-  Route, Routes
-} from 'react-router-dom';
-
-//styles
-import './App.scss';
-
-//components
-
-//pages
-import { Home, Contact, Checkout, Cart } from './pages';
-
-//layout
-import { Header, Footer } from './layout'
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+// Pages
+import { Home, Contact, Login, Register, Reset, Admin } from "./pages";
+// Components
+import { Header, Footer } from "./components";
 
 function App() {
 
+
   return (
-    <div className='w-full h-screen bg-[#212121] overflow-x-hidden'>
-      <Header></Header>
+    <>
       <BrowserRouter>
-
+        <Header />
         <Routes>
-
           <Route path="/" element={<Home />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/reset" element={<Reset />} />
 
-          //Test
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/admin/*" element={<Admin />} />
 
         </Routes>
-
+        <Footer />
       </BrowserRouter>
-      <Footer className="bottom-0"></Footer>
-
-    </div>
-
+    </>
   );
 }
 
