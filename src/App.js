@@ -1,42 +1,29 @@
-import React from 'react';
-
-import {
-  BrowserRouter,
-  Route, Routes
-} from 'react-router-dom';
-
-//styles
-import './App.scss';
-
-//components
-import { Header, Footer } from './components';
-
-//pages
-import { Home, Contact, Checkout, Cart } from './pages';
-
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+// Pages
+import { Home, Contact, Login, Register, Reset, Admin } from "./pages";
+// Components
+import { Header, Footer } from "./components";
 
 function App() {
 
+
   return (
     <>
-
       <BrowserRouter>
         <Header />
         <Routes>
-
           <Route path="/" element={<Home />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/reset" element={<Reset />} />
 
-          //Test
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/admin/*" element={<Admin />} />
 
         </Routes>
         <Footer />
       </BrowserRouter>
-
     </>
-
   );
 }
 

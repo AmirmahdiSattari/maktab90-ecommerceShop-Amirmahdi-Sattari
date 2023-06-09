@@ -1,9 +1,9 @@
 import React from 'react'
-
+import darDastkar from '../../../assets/darDastkar.jpg'
 const AddProduct = () => {
   return (
     <div>
-      AddProduct
+    <img src={darDastkar} style={{width:'900px'}}/>
     </div>
   )
 }

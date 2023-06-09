@@ -1,9 +1,11 @@
 import React from 'react'
-
+import adminDashbord from '../../../assets/adminDashbord.jpg'
 const Home = () => {
   return (
     <div>
-      Home
+     <img
+     src={adminDashbord}
+     />
     </div>
   )
 }
