@@ -17,6 +17,7 @@ const ViewProduct = () => {
                 main: '#f44336',
             },
         },
+        direction: 'rtl',
     });
 
     const [paginationModel, setPaginationModel] = useState({
@@ -73,7 +74,7 @@ const ViewProduct = () => {
                                 <img
                                     src={`http://localhost:8000/images/products/thumbnails/${params.value}`}
                                     alt={params.value}
-                                    style={{ width: '100%', borderRadius: '15%', objectFit: 'cover',padding:'15px' }}
+                                    style={{ width: '100%', borderRadius: '15%', objectFit: 'cover', padding: '15px' }}
                                 />
                             ),
                         },
@@ -93,18 +94,18 @@ const ViewProduct = () => {
                             renderCell: (params) => (
                                 <p>{subCategories[params.value]}</p>
                             )
-                        }, 
+                        },
                         {
                             field: 'price',
                             headerName: ' قیمت ',
                             flex: 1,
-                       
+
                         },
                         {
                             field: 'quantity',
                             headerName: ' موجودی ',
                             flex: 1,
-                       
+
                         },
                         {
                             field: 'delete-edit',
