@@ -17,9 +17,9 @@ const logo = (
 const cart = (
   <span className={styles.cart}>
     <Link to="/cart">
+     
+      <FaShoppingCart size={20} style={{padding:'0 3px'}}/>
       سبد خرید
-      <FaShoppingCart size={20} />
-      <p>0</p>
     </Link>
   </span>
 );
