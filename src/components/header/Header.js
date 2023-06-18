@@ -3,6 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import styles from "./Header.module.scss";
 import { FaShoppingCart, FaTimes } from "react-icons/fa";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
+import { style } from "@mui/system";
 
 const logo = (
   <div className={styles.logo}>
@@ -84,10 +85,10 @@ const Header = () => {
             </li>
 
 
-            {adminAccess ? <li>
+            {adminAccess ?
               <Link to='admin/admin/home'>
-                <button className="--btn --btn-primary"> ادمین </button></Link>
-            </li> : ''
+                <li className={`${styles.adminArea} ${activeLink}`}> ادمین </li></Link>
+            : ''
             }
 
             <li>

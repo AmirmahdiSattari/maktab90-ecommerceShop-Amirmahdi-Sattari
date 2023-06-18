@@ -4,7 +4,12 @@ import axios from 'axios';
 import { DataGrid } from '@mui/x-data-grid';
 import { Button, IconButton, ThemeProvider, createTheme } from '@mui/material';
 import { purple } from '@mui/material/colors';
-import { FaTrash, FaPenNib } from 'react-icons/fa'
+import { FaTrash, FaPenNib, FaClipboardCheck } from 'react-icons/fa'
+
+import Swal from 'sweetalert2/dist/sweetalert2.js'
+import 'sweetalert2/src/sweetalert2.scss'
+
+
 
 const ViewProduct = () => {
 
@@ -17,6 +22,7 @@ const ViewProduct = () => {
                 main: '#f44336',
             },
         },
+        direction: 'rtl',
     });
 
     const [paginationModel, setPaginationModel] = useState({
@@ -54,6 +60,28 @@ const ViewProduct = () => {
         '64820e8eaabca95eac5fb790': ' تک موتوره ',
     }
 
+    const hadleConfirmDelete = () => {
+
+        Swal.fire({
+            title: 'همه ی تغییرات به حالت اولیه برگردد',
+            text: "این مرحله قابل بازگشت نمیباشد",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'بله , تغییرات را لغو کن'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              Swal.fire(
+                'تغییرات لغو شد',
+                'همه چیز به حالت قبلی بازگشت',
+                'success'
+              )
+            }
+          })
+
+    }
+
     return (
         <ThemeProvider theme={theme}>
             <div style={{
@@ -61,6 +89,28 @@ const ViewProduct = () => {
                 margin: '0 auto', boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
                 borderRadius: '5px', overflowX: 'scroll',
             }}>
+
+
+                <div class="mydict">
+                    <button className='--btn-save'>
+                        <FaClipboardCheck style={{
+                            paddingTop: '3',
+                            margin: '0 2'
+                        }} />
+                        ذخیره ی تغییرات
+                    </button>
+
+                    <button className='--btn-discard'
+                        onClick={hadleConfirmDelete}>
+                        <FaTrash style={{
+                            paddingTop: '3',
+                            margin: '0 2'
+                        }} />
+                        لغو تغییرات
+
+                    </button>
+                </div>
+
                 <DataGrid
                     rows={rows}
                     getRowId={getRowId}
@@ -73,7 +123,7 @@ const ViewProduct = () => {
                                 <img
                                     src={`http://localhost:8000/images/products/thumbnails/${params.value}`}
                                     alt={params.value}
-                                    style={{ width: '100%', borderRadius: '15%', objectFit: 'cover',padding:'15px' }}
+                                    style={{ width: '100%', borderRadius: '15%', objectFit: 'cover', padding: '15px' }}
                                 />
                             ),
                         },
@@ -93,18 +143,18 @@ const ViewProduct = () => {
                             renderCell: (params) => (
                                 <p>{subCategories[params.value]}</p>
                             )
-                        }, 
+                        },
                         {
                             field: 'price',
                             headerName: ' قیمت ',
                             flex: 1,
-                       
+
                         },
                         {
                             field: 'quantity',
                             headerName: ' موجودی ',
                             flex: 1,
-                       
+
                         },
                         {
                             field: 'delete-edit',
