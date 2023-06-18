@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 import { DataGrid } from '@mui/x-data-grid';
-import { Button, IconButton, ThemeProvider, createTheme } from '@mui/material';
+import { ThemeProvider, createTheme } from '@mui/material';
 import { purple } from '@mui/material/colors';
-import { FaTrash, FaPenNib } from 'react-icons/fa'
+import styles from './Orders.modules.scss';
+
 
 const Orders = () => {
 
@@ -17,6 +18,7 @@ const Orders = () => {
         main: '#f44336',
       },
     },
+    direction: 'rtl',
   });
 
   const [paginationModel, setPaginationModel] = useState({
@@ -40,19 +42,38 @@ const Orders = () => {
         setRows(products);
         setRowCount(total);
         setLoading(false);
-       
+
       });
   }, [paginationModel.page, paginationModel.pageSize]);
+
 
   return (
 
     <ThemeProvider theme={theme}>
+
 
       <div style={{
         height: '100%', width: '95%',
         margin: '0 auto', boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
         borderRadius: '5px', overflowX: 'scroll',
       }}>
+
+        <div class="mydict">
+          <div>
+            <label>
+              <input type="radio" name="radio" />
+              
+                <span> ارسال شده </span>
+
+            </label>
+            <label>
+              <input type="radio" name="radio" />
+                <span>ارسال نشده</span>
+            </label>
+
+          </div>
+        </div>
+
         <DataGrid
           rows={rows}
           getRowId={getRowId}
@@ -85,7 +106,7 @@ const Orders = () => {
               field: 'deliveryStatus',
               headerName: ' وضیعت ارسال ',
               flex: 1,
-          
+
             },
             {
               field: 'deliveryDate',
