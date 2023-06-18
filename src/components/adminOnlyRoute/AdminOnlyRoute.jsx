@@ -53,9 +53,7 @@ export const AdminOnlyRoute = (e) => {
 
     }
     else {
-
       console.log("acess denied")
-
     }
   }).catch((err) => {
 

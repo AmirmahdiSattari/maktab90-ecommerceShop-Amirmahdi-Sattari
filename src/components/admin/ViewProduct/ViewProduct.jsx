@@ -6,10 +6,9 @@ import { Button, IconButton, ThemeProvider, createTheme } from '@mui/material';
 import { purple } from '@mui/material/colors';
 import { FaTrash, FaPenNib, FaClipboardCheck } from 'react-icons/fa'
 
+// sweet alert
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import 'sweetalert2/src/sweetalert2.scss'
-
-
 
 const ViewProduct = () => {
 
@@ -33,6 +32,7 @@ const ViewProduct = () => {
     const [rows, setRows] = useState([]);
     const [rowCount, setRowCount] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [renderNewData,setRenderNewData] = useState(false);
 
     const getRowId = (row) => row._id;
 
@@ -43,13 +43,14 @@ const ViewProduct = () => {
                 console.log(res);
                 const products = res.data.data.products;
                 const total = res.data.total;
+
                 console.log(products);
 
                 setRows(products);
                 setRowCount(total);
                 setLoading(false);
             });
-    }, [paginationModel.page, paginationModel.pageSize]);
+    }, [paginationModel.page, paginationModel.pageSize,renderNewData]);
 
     const categories = {
         '64820ce2aabca95eac5fb781': 'ساعت مچی',
@@ -61,7 +62,6 @@ const ViewProduct = () => {
     }
 
     const hadleConfirmDelete = () => {
-
         Swal.fire({
             title: 'همه ی تغییرات به حالت اولیه برگردد',
             text: "این مرحله قابل بازگشت نمیباشد",
@@ -70,17 +70,30 @@ const ViewProduct = () => {
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'بله , تغییرات را لغو کن'
-          }).then((result) => {
+        }).then((result) => {
             if (result.isConfirmed) {
-              Swal.fire(
-                'تغییرات لغو شد',
-                'همه چیز به حالت قبلی بازگشت',
-                'success'
-              )
+                Swal.fire(
+                    'تغییرات لغو شد',
+                    'همه چیز به حالت قبلی بازگشت',
+                    'success'
+                )
             }
-          })
-
+        })
     }
+
+    const handleDelete = (id) => {
+        const formInfo = {
+            method: 'delete',
+            url: `http://localhost:8000/api/products/${id}`,
+        }
+
+        console.log(`Delete product with ID ${id}`);
+
+        axios(formInfo).then((res) => {
+            console.log(res)
+            setRenderNewData(!renderNewData);
+        })
+    };
 
     return (
         <ThemeProvider theme={theme}>
@@ -89,7 +102,6 @@ const ViewProduct = () => {
                 margin: '0 auto', boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
                 borderRadius: '5px', overflowX: 'scroll',
             }}>
-
 
                 <div class="mydict">
                     <button className='--btn-save'>
@@ -160,13 +172,14 @@ const ViewProduct = () => {
                             field: 'delete-edit',
                             headerName: 'تغییر وضعیت ',
                             flex: 1,
-                            renderCell: () => (
+                            renderCell: (params) => (
                                 <div>
                                     <Button
                                         style={{
                                             color: 'red',
                                             fontFamily: 'Vazirmatn'
-                                        }}>
+                                        }}
+                                        onClick={() => handleDelete(params.id)}>
                                         <FaTrash style={{
                                             opacity: '.7',
                                             marginLeft: '5'
