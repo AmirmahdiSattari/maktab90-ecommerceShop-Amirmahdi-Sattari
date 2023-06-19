@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 import { DataGrid } from '@mui/x-data-grid';
-import { Button, IconButton, ThemeProvider, createTheme } from '@mui/material';
+import { Button, ThemeProvider, createTheme } from '@mui/material';
 import { purple } from '@mui/material/colors';
 import { FaTrash, FaPenNib, FaClipboardCheck } from 'react-icons/fa'
 
@@ -86,9 +86,7 @@ const ViewProduct = () => {
             method: 'delete',
             url: `http://localhost:8000/api/products/${id}`,
         }
-
         console.log(`Delete product with ID ${id}`);
-
         axios(formInfo).then((res) => {
             console.log(res)
             setRenderNewData(!renderNewData);
