@@ -47,6 +47,40 @@ const Orders = () => {
   }, [paginationModel.page, paginationModel.pageSize]);
 
 
+  const handleFilterOrders = (e) => {
+
+    console.log(e)
+    let status = e.target.value
+
+    if (status != "All") {
+      axios(`http://localhost:8000/api/orders?deliveryStatus=${status}`).then((res) => {
+        console.log(res)
+
+        const deliverdProducts = res.data.data.orders;
+        const deliverdTotal = res.data.totalPrice;
+
+        setRows(deliverdProducts);
+        setRowCount(deliverdTotal);
+
+
+      }).catch((err) => { console.log(err) })
+    } else {
+
+      axios.get(`http://localhost:8000/api/orders?page=${paginationModel.page + 1}`).then((res) => {
+        console.log(res);
+        const products = res.data.data.orders;
+        const total = res.data.totalPrice;
+        setRows(products);
+        setRowCount(total);
+        setLoading(false);
+
+      }).catch((err)=>{
+        console.log(err)
+      })
+    }
+
+  }
+
   return (
 
     <ThemeProvider theme={theme}>
@@ -61,14 +95,20 @@ const Orders = () => {
         <div class="mydict">
           <div>
             <label>
-              <input type="radio" name="radio" />
-              
-                <span> ارسال شده </span>
+              <input type="radio" name="radio" value={true} onClick={(e) => handleFilterOrders(e)} />
+
+              <span> ارسال شده </span>
 
             </label>
             <label>
-              <input type="radio" name="radio" />
-                <span>ارسال نشده</span>
+              <input type="radio" name="radio" value={"All"} onClick={(e) => handleFilterOrders(e)} />
+
+              <span> همه</span>
+
+            </label>
+            <label>
+              <input type="radio" name="radio" value={false} onClick={(e) => handleFilterOrders(e)} />
+              <span>ارسال نشده</span>
             </label>
 
           </div>

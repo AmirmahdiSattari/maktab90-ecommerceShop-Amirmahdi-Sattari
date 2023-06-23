@@ -13,7 +13,7 @@ const Admin = () => {
   const adminCookie = cookies.find(cookie => cookie.trim().startsWith('admin='));
   if (adminCookie) {
     const [, value] = adminCookie.split('=');
-    console.log(value); // Output: "true"
+  
   }else{
     window.location.replace('/');
   }

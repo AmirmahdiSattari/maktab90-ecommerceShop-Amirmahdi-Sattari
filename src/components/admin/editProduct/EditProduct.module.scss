@@ -1,0 +1,155 @@
+main {
+    width: 100%;
+    height: 100%;
+
+    div {
+        width: 100%;
+        height: 69%;
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            width: 55%;
+            height: 65%;
+            border: 2px solid gray;
+            border-radius: 1%;
+
+            box-shadow: rgba(0, 183, 255, 0.573) 5px 5px, rgba(0, 183, 255, 0.37) 10px 10px, rgba(0, 183, 255, 0.452) 15px 15px, rgba(0, 183, 255, 0.118) 20px 20px, rgba(0, 183, 255, 0.03) 25px 25px;
+
+            div {
+                padding: .8rem 0;
+                margin: .7rem 0;
+
+                label {
+                    padding-right: .5rem;
+                }
+
+                input {
+                    border: none;
+                    outline: none;
+                    padding: 0 .5rem;
+                    box-shadow: none;
+                    width: 75%;
+                    color: rgba(0, 0, 0, 0.576);
+                    transition: box-shadow 0.2s ease-in-out;
+
+                    &:focus {
+                        box-shadow: none;
+                    }
+                }
+
+                textarea {
+                    width: 98%;
+                }
+
+                width: 45%;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.308);
+
+                select {
+                    border: none;
+                    padding: 0 .5rem;
+                    margin: 0 .5rem;
+                    border-radius: 10%;
+
+                }
+            }
+
+        }
+
+    }
+
+}
+
+.categories {
+    display: flex;
+    justify-content: space-between;
+
+    div {
+        select {
+            border: none;
+            outline: none;
+            padding: 0 .5rem;
+            box-shadow: none;
+        }
+    }
+
+}
+
+.backward{
+
+    display: flex;
+    width: 100%;
+    height: 5%;
+    font-size: 3rem;
+    color: #8b8a8c;
+    margin: 1rem;
+    cursor: pointer;
+    
+}
+
+
+.buttonContainer {
+
+    display: flex;
+    justify-content: space-between;
+    border: none;
+
+    .buttonAddData {
+
+        display: inline-block;
+        outline: none;
+        cursor: pointer;
+        font-weight: 300;
+        border-radius: 3px;
+        padding: 4px 8px;
+        border-radius: 4px;
+        color: #fff;
+        background: #6200ee;
+        line-height: 1;
+        font-size: 14px;
+        height: 36px;
+
+        text-decoration: none;
+        min-width: 64px;
+        border: none;
+        text-align: center;
+        box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+        transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+
+        &:hover {
+            background: rgb(98, 0, 238);
+            box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
+        }
+    }
+
+
+    .buttonClearData {
+
+        display: inline-block;
+        outline: none;
+        cursor: pointer;
+        font-weight: 300;
+        border-radius: 3px;
+        padding: 4px 8px;
+        border-radius: 4px;
+        color: #fff;
+        background: #8b8a8c;
+        line-height: 1;
+        font-size: 14px;
+        height: 36px;
+
+        text-decoration: none;
+        min-width: 64px;
+        border: none;
+        text-align: center;
+        box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+        transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+
+        &:hover {
+            box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
+        }
+    }
+}

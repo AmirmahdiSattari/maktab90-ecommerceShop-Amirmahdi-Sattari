@@ -1,50 +1,51 @@
-.footer {
-    background-color: var(--dark-blue);
-    color: #fff;
-    font-size: 1.6rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 8rem;
-    p {
-      color: #fff;
+section {
+
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  margin-top: 2rem;
+
+  border-top: 1px solid #d894002e;
+
+  box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;
+
+  div {
+
+    width: 20%;
+    display: inline;
+    padding: 5px;
+    font-size: small;
+
+    span {
+
+      font-weight: bold;
+      color: #c08402;
+      margin:.3rem 0;
+
     }
-  }
 
-  .upperSection{
-    display: flex;
-    flex-direction: row;
-    justify-content:space-evenly;
-    align-items: center;
-    background-color: #0a1930;
-    color: #fff;
-    width: 100%;
-    padding: 20px 5px;
-    flex-wrap: wrap;
-
-    .footerSection{
-      height: 150px;
-      margin: 5px 5px;
+    ul {
       list-style: none;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-evenly;
-      align-items:start;
-      font-size: small;
 
-      h4{
-        color: #ff4500;
+      li {
+        display: flex;
+        justify-content: start;
+
       }
     }
-    .socailMedia{
-      width: 80%;
-     margin: 10px 0;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-evenly;
-      align-items: center;
-      cursor: pointer;
-      color: #ff4500;
-    }
   }
 
+}
+
+.socailMedia {
+
+  display: flex;
+  width: 9rem;
+  justify-content: space-between;
+  font-weight: bold;
+  font-size: 1.5rem;
+  padding:.5rem ;
+
+}
