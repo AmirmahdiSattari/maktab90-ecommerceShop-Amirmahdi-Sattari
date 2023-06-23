@@ -9,6 +9,7 @@ import { FaTrash, FaPenNib, FaClipboardCheck } from 'react-icons/fa'
 // sweet alert
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import 'sweetalert2/src/sweetalert2.scss'
+import EditProduct from './../editProduct/EditProduct';
 
 const ViewProduct = () => {
 
@@ -32,7 +33,9 @@ const ViewProduct = () => {
     const [rows, setRows] = useState([]);
     const [rowCount, setRowCount] = useState(0);
     const [loading, setLoading] = useState(true);
-    const [renderNewData,setRenderNewData] = useState(false);
+    const [renderNewData, setRenderNewData] = useState(false);
+    const [edit, setEdit] = useState(null);
+    const [modal, setModal] = useState(false);
 
     const getRowId = (row) => row._id;
 
@@ -40,26 +43,22 @@ const ViewProduct = () => {
         setLoading(true);
         axios
             .get(`http://localhost:8000/api/products?page=${paginationModel.page + 1}`).then((res) => {
-                console.log(res);
                 const products = res.data.data.products;
                 const total = res.data.total;
-
-                console.log(products);
-
                 setRows(products);
                 setRowCount(total);
                 setLoading(false);
             });
-    }, [paginationModel.page, paginationModel.pageSize,renderNewData]);
+    }, [paginationModel.page, paginationModel.pageSize, renderNewData]);
+
 
     const categories = {
         '64820ce2aabca95eac5fb781': 'ساعت مچی',
+        '64820cf9aabca95eac5fb785': 'ساعت مردانه',
+        '64820d06aabca95eac5fb789': 'ساعت زنانه',
+        '64916d1760da5072b2c63d80': 'ساعت های ست'
     }
-    const subCategories = {
-        '64820eeaaabca95eac5fb79c': ' بند استیل ',
-        '64820edaaabca95eac5fb798': ' بند چرم ',
-        '64820e8eaabca95eac5fb790': ' تک موتوره ',
-    }
+
 
     const hadleConfirmDelete = () => {
         Swal.fire({
@@ -82,24 +81,58 @@ const ViewProduct = () => {
     }
 
     const handleDelete = (id) => {
-        const formInfo = {
-            method: 'delete',
-            url: `http://localhost:8000/api/products/${id}`,
-        }
-        console.log(`Delete product with ID ${id}`);
-        axios(formInfo).then((res) => {
-            console.log(res)
-            setRenderNewData(!renderNewData);
+
+
+        Swal.fire({
+            title: 'آیا میخواهید محصول را حذف کنید',
+            text: "این مرحله قابل بازگشت نمیباشد",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: ' بله '
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                const formInfo = {
+                    method: 'delete',
+                    url: `http://localhost:8000/api/products/${id}`,
+                }
+                console.log(`Delete product with ID ${id}`);
+                axios(formInfo).then((res) => {
+                    console.log(res)
+                    setRenderNewData(!renderNewData);
+                })
+
+
+                Swal.fire(
+                    'تغییرات لغو شد',
+                    'همه چیز به حالت قبلی بازگشت',
+                    'success'
+                )
+            }
         })
+
     };
+
+    const handleEdit = (id) => {
+        console.log(id)
+        console.log(edit)
+        setModal(!modal)
+        setEdit(id);
+        setRenderNewData(!renderNewData)
+        console.log(edit)
+    }
 
     return (
         <ThemeProvider theme={theme}>
             <div style={{
-                height: '100%', width: '95%',
+                height: '100%', width: '100%',
                 margin: '0 auto', boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
-                borderRadius: '5px', overflowX: 'scroll',
+                borderRadius: '5px', overflowX: 'scroll', overflowY: 'hidden'
             }}>
+
+                {modal && <EditProduct data={edit}></EditProduct>}
 
                 <div class="mydict">
                     <button className='--btn-save'>
@@ -147,14 +180,6 @@ const ViewProduct = () => {
                             )
                         },
                         {
-                            field: 'subcategory',
-                            headerName: ' دسته بندی فرعی ',
-                            flex: 1,
-                            renderCell: (params) => (
-                                <p>{subCategories[params.value]}</p>
-                            )
-                        },
-                        {
                             field: 'price',
                             headerName: ' قیمت ',
                             flex: 1,
@@ -189,7 +214,8 @@ const ViewProduct = () => {
                                         style={{
                                             color: 'darkblue',
                                             fontFamily: 'Vazirmatn'
-                                        }}>
+                                        }}
+                                        onClick={() => handleEdit(params)}>
                                         <FaPenNib style={{
                                             opacity: '.7',
                                             marginLeft: '5'

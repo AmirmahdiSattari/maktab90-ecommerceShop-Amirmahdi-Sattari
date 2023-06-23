@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import styles from "./Header.module.scss";
-import { FaShoppingCart, FaTimes } from "react-icons/fa";
+import { FaShoppingCart, FaTimes, FaSearch } from "react-icons/fa";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
-import { style } from "@mui/system";
 
 const logo = (
   <div className={styles.logo}>
@@ -18,8 +17,7 @@ const logo = (
 const cart = (
   <span className={styles.cart}>
     <Link to="/cart">
-     
-      <FaShoppingCart size={20} style={{padding:'0 3px'}}/>
+      <FaShoppingCart size={20} style={{ padding: '0 3px' }} />
       سبد خرید
     </Link>
   </span>
@@ -27,18 +25,15 @@ const cart = (
 
 const activeLink = (({ isActive }) => isActive ? `${styles.active}` : '')
 
-
 const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [adminAccess, setAdminAccess] = useState(false);
-
 
   useEffect(() => {
     const cookies = document.cookie.split(';');
     const adminCookie = cookies.find(cookie => cookie.trim().startsWith('admin='));
     if (adminCookie) {
       const [, value] = adminCookie.split('=');
-      console.log(value);
       setAdminAccess(true);
     } else {
       setAdminAccess(false);
@@ -64,19 +59,17 @@ const Header = () => {
       <div className={styles.header}>
         {logo}
 
+
         <nav
           className={
             showMenu ? `${styles["show-nav"]}` : `${styles["hide-nav"]}`
-          }
-        >
+          }>
           <div
             className={
               showMenu
                 ? `${styles["nav-wrapper"]} ${styles["show-nav-wrapper"]}`
                 : `${styles["nav-wrapper"]}`
-            }
-            onClick={hideMenu}
-          ></div>
+            } onClick={hideMenu}></div>
 
           <ul onClick={hideMenu}>
             <li className={styles["logo-mobile"]}>
@@ -88,7 +81,7 @@ const Header = () => {
             {adminAccess ?
               <Link to='admin/admin/home'>
                 <li className={`${styles.adminArea} ${activeLink}`}> ادمین </li></Link>
-            : ''
+              : ''
             }
 
             <li>
@@ -100,7 +93,6 @@ const Header = () => {
           </ul>
           <div className={styles["header-right"]} onClick={hideMenu}>
             <span className={styles.links}>
-
               {adminAccess ? <NavLink to="/" className={activeLink}
                 onClick={logout}>خروج</NavLink>
                 :
@@ -110,10 +102,14 @@ const Header = () => {
                   <NavLink to="/order-history" className={activeLink}> سفارش های من </NavLink>
                 </span>
               }
-
             </span>
-
             {cart}
+
+            <div className={styles.searchInput}>
+              <FaSearch />
+              <input type='search' />
+            </div>
+            
           </div>
         </nav>
 

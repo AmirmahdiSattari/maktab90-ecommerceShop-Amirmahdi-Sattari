@@ -1,59 +1,3 @@
-form {
-
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    justify-content: center;
-    margin: 0 auto;
-    width: 90%;
-    height: 90%;
-
-    div {
-        padding: .8rem 0;
-        margin: .7rem 0;
-
-        label {
-            padding-right: .5rem;
-        }
-
-        input {
-            border: none;
-            outline: none;
-            padding: 0 .5rem;
-            box-shadow: none;
-            width: 75%;
-
-            color: rgba(0, 0, 0, 0.576);
-
-            transition: box-shadow 0.2s ease-in-out;
-
-            &:focus {
-                box-shadow: none;
-            }
-        }
-
-        textarea {
-
-            width: 98%;
-
-        }
-
-        width: 45%;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.308);
-
-        select {
-
-            border: none;
-            padding: 0 .5rem;
-            margin: 0 .5rem;
-            border-radius: 10%;
-
-        }
-    }
-
-}
-
-
 .categories {
     display: flex;
     justify-content: space-between;
@@ -69,6 +13,97 @@ form {
 
 }
 
+
+.mainContainer {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 98%;
+    height: 95%;
+
+    .productPreview{
+
+        border: 2px solid gray;
+        border-radius: 1%;
+        width: 40%;
+        height: 100%;
+        box-shadow: rgba(0, 183, 255, 0.573) 5px 5px, rgba(0, 183, 255, 0.37) 10px 10px, rgba(0, 183, 255, 0.452) 15px 15px, rgba(0, 183, 255, 0.118) 20px 20px, rgba(0, 183, 255, 0.03) 25px 25px;
+
+        .thumbnail {
+            width: 100%;
+            height:15rem ;
+            border-radius: 1%;
+            object-fit: cover;
+
+            box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+        }
+
+    }
+
+
+    form {
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        width: 55%;
+        height: 100%;
+        border: 2px solid gray;
+        border-radius: 1%;
+
+        box-shadow: rgba(0, 183, 255, 0.573) 5px 5px, rgba(0, 183, 255, 0.37) 10px 10px, rgba(0, 183, 255, 0.452) 15px 15px, rgba(0, 183, 255, 0.118) 20px 20px, rgba(0, 183, 255, 0.03) 25px 25px;
+
+        div {
+            padding: .8rem 0;
+            margin: .7rem 0;
+
+            label {
+                padding-right: .5rem;
+            }
+
+            input {
+                border: none;
+                outline: none;
+                padding: 0 .5rem;
+                box-shadow: none;
+                width: 75%;
+
+                color: rgba(0, 0, 0, 0.576);
+
+                transition: box-shadow 0.2s ease-in-out;
+
+                &:focus {
+                    box-shadow: none;
+                }
+            }
+
+            textarea {
+
+                width: 98%;
+
+            }
+
+            width: 45%;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.308);
+
+            select {
+
+                border: none;
+                padding: 0 .5rem;
+                margin: 0 .5rem;
+                border-radius: 10%;
+
+            }
+        }
+
+    }
+
+
+}
 
 
 

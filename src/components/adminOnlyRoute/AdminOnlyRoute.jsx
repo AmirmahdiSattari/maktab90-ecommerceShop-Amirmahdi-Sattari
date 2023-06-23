@@ -6,17 +6,14 @@ import Login from './../../pages/auth/Login';
 export const AdminOnlyRoute = (e) => {
 
   const clearInputs = () => {
-
     const inputs = document.querySelectorAll('input[type="text"], input[type="password"]');
     inputs.forEach(input => {
       input.value = '';
     });
-   
-    console.log("🟢clear input runs successfully")
   }
 
-  const notifySuccess = () => toast("Login successfull");
-  const notifyError = () => toast("can not find user");
+  const notifySuccess = () => toast("ورود موفقیت آمیز بود");
+  const notifyError = () => toast("کاربری پیدا نشد!");
 
   e.preventDefault();
 
@@ -37,7 +34,6 @@ export const AdminOnlyRoute = (e) => {
   axios(formInfo).then((res) => {
 
     if (res.data.status == 'success') {
-
       notifySuccess();
 
       const now = new Date();
@@ -45,12 +41,9 @@ export const AdminOnlyRoute = (e) => {
 
       document.cookie = `admin=true; expires=${expireDate.toUTCString()}; path=/ `;
 
-      console.log("Admin Access")
-
       setInterval(() => {
         window.location.replace('/admin/admin/home');
       }, 2000);
-
     }
     else {
       console.log("acess denied")
@@ -62,7 +55,6 @@ export const AdminOnlyRoute = (e) => {
       notifyError();
       clearInputs();
     }
-
   })
 
   {
