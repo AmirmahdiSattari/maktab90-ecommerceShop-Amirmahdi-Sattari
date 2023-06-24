@@ -71,7 +71,17 @@ section {
             display: flex;
             flex-direction: column;
             justify-content: space-evenly;
-            align-items: start;
+            align-items: center;
+
+
+            .productName{
+                color: black;
+                font-weight: bold;
+            }
+
+            .walletIcon{
+                color: #b2965a;
+            }
 
             p {
                 margin: .5rem 0;
@@ -83,6 +93,7 @@ section {
                 display: flex;
                 justify-content: space-around;
                 cursor: pointer;
+                color: rgba(0, 0, 0, 0.655);
 
             }
 

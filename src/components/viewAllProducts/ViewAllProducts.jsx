@@ -1,6 +1,5 @@
 import React from 'react'
 import styles from './ViewAllProduct.module.scss'
-import Saat from '../../assets/Saat.jpg'
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FaWallet } from 'react-icons/fa'
@@ -19,10 +18,8 @@ const ViewAllProducts = () => {
     useEffect(() => {
 
         const formData = {
-
             url: `http://localhost:8000/api/products`,
             method: 'GET',
-
         }
 
         axios(formData).then((res) => {
@@ -38,8 +35,6 @@ const ViewAllProducts = () => {
 
 
 
-
-
     const handleFilterViewProduct = (e) => {
 
         console.log(e)
@@ -47,9 +42,9 @@ const ViewAllProducts = () => {
         console.log(status)
         if (status != "All") {
             axios(`http://localhost:8000/api/products?sort=${status}`).then((res) => {
+
                 console.log(res)
                 setData(res.data.data.products)
-
 
             }).catch((err) => { console.log(err) })
         } else {
@@ -57,14 +52,12 @@ const ViewAllProducts = () => {
             axios.get(`http://localhost:8000/api/products?sort=price&quantity[gte]=10}`).then((res) => {
                 console.log(res);
 
-
             }).catch((err) => {
                 console.log(err)
             })
         }
 
     }
-
 
     return (
 
@@ -99,43 +92,32 @@ const ViewAllProducts = () => {
 
             <div className={styles.cardMainContainer}>
 
-
                 <div className={styles.UpperFilter}>
                     <label>فیلتر بر اساس : </label>
                     <div>
                         <label>
                             <input type="radio" name="radio" value={`-price`} onClick={(e) => handleFilterViewProduct(e)} />
-
                             <span> گرانترین </span>
-
                         </label>
 
                         <label>
                             <input type="radio" name="radio" value={"ساعت مجی"} onClick={(e) => handleFilterViewProduct(e)} />
-
                             <span> ساعت مچی </span>
-
                         </label>
 
                         <label>
                             <input type="radio" name="radio" value={"مردانه"} onClick={(e) => handleFilterViewProduct(e)} />
-
                             <span> ساعت مچی مردانه </span>
-
                         </label>
 
                         <label>
                             <input type="radio" name="radio" value={"زنانه"} onClick={(e) => handleFilterViewProduct(e)} />
-
                             <span> ساعت مچی زنانه </span>
-
                         </label>
 
                         <label>
                             <input type="radio" name="radio" value={"ست"} onClick={(e) => handleFilterViewProduct(e)} />
-
                             <span> ساعت های ست </span>
-
                         </label>
 
                         <label>
@@ -158,10 +140,10 @@ const ViewAllProducts = () => {
                                     <img className={styles.prodcutThumbnail} src={`http://localhost:8000/images/products/thumbnails/${data.thumbnail}`} alt="ساعت " />
                                 </div>
                                 <div className={styles.productDataContainer}>
-                                    <p> {data.name} </p>
+                                    <p className={styles.productName}> {data.name} </p>
                                     <p className={styles.productPriceContainer}> {data.price} تومان
                                         <span>
-                                            <FaWallet />
+                                            <FaWallet className={styles.walletIcon}/>
                                         </span>
                                     </p>
                                 </div>
