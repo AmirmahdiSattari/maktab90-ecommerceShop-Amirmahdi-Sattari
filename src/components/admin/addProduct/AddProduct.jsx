@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styles from './AddProduct.module.scss';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
+import { FaAngleDoubleLeft } from 'react-icons/fa'
+import SetW from '../../../assets/SetW.jpg'
 
 const AddProduct = () => {
 
@@ -13,10 +15,8 @@ const AddProduct = () => {
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [selectedSubCategory, setSelectedSubCategory] = useState(0);
 
-  
   const [selectedImage, setSelectedImage] = useState(null);
   const [data, setData] = useState({ file: null })
-
 
   const handleValidateData = (e) => {
 
@@ -90,15 +90,33 @@ const AddProduct = () => {
       });
   }
 
-  const handleClear = (e) => {
-    e.target.reset();
-  }
+
+  const [previewProduct, setPreviewProduct] = useState({
+    productName: '',
+    productPrice: null,
+    productAmount: null,
+    productCategory: '',
+    productSubCategory: '',
+    productBrand: '',
+    productDesc: ''
+  });
+
 
   const handleChangeCategory = (e) => {
+
+    let categorySelected = e.target.value;
+    setPreviewProduct(prevState => ({
+      ...prevState,
+      productCategory: { categorySelected }
+    }))
+
+    console.log(previewProduct.productCategory)
+
     let categoryId = e.target.selectedOptions[0].id
     axios.get(`http://localhost:8000/api/subcategories?category=${categoryId}`)
       .then((res) => {
         setSubCategories(res.data.data.subcategories)
+        console.log(res)
       }).catch((error) => {
         console.log(error)
       });
@@ -106,6 +124,15 @@ const AddProduct = () => {
   }
 
   const handleChangeSubCategory = (e) => {
+
+    let subCategorySelected = e.target.value;
+    setPreviewProduct(prevState => ({
+      ...prevState,
+      productSubCategory: { subCategorySelected }
+    }))
+
+    console.log(previewProduct.productSubCategory)
+
     let subCategory = e.target.selectedOptions[0].id
     setSelectedSubCategory(subCategory)
   }
@@ -116,6 +143,8 @@ const AddProduct = () => {
     setData({ file: selectedFile });
     reader.onload = () => { setSelectedImage(reader.result); };
     reader.readAsDataURL(selectedFile);
+
+
   };
 
   useEffect(() => {
@@ -128,21 +157,37 @@ const AddProduct = () => {
       })
   }, [])
 
+
+  const handlePreview = (e) => {
+
+    const { id, value } = e.target;
+
+    setPreviewProduct(prevState => ({
+      ...prevState,
+      [id]: value
+    }));
+
+    console.log("📌", previewProduct)
+  }
+
+  console.log(selectedCategory)
+  console.log(previewProduct)
+
   return (
     < div className={styles.mainContainer}>
 
       <form onSubmit={(e) => handleValidateData(e)}>
         <div>
           <label>نام کالا : </label>
-          <input type='text' />
+          <input type='text' id='ProductName' onChange={(e) => { handlePreview(e) }} />
         </div>
         <div>
           <label> قیمت : </label>
-          <input type='number' />
+          <input type='number' id='ProductPrice' onChange={(e) => { handlePreview(e) }} />
         </div>
         <div>
           <label>موجودی : </label>
-          <input type='number' />
+          <input type='number' id='ProductAmount' onChange={(e) => { handlePreview(e) }} />
         </div>
         <div className={styles.categories}>
           <div>
@@ -168,14 +213,15 @@ const AddProduct = () => {
         </div>
         <div>
           <label>برند : </label>
-          <input type='text' />
+          <input type='text' id='ProductBrand' onChange={(e) => { handlePreview(e) }} />
         </div>
         <div>
           <label> توضیحات : </label>
-          <textarea></textarea>
+          <textarea id='ProducDesc' onChange={(e) => { handlePreview(e) }}></textarea>
         </div>
         <div className={styles.buttonContainer}>
-          <button className={styles.buttonAddData} type="submit">اضافه کردن کالا</button>
+          <button className={styles.buttonAddData} type="submit"
+            id='ProductDesc' onChange={(e) => { handlePreview(e) }}>اضافه کردن کالا</button>
         </div>
         <div>
           <label> تصویر اصلی :</label>
@@ -184,10 +230,60 @@ const AddProduct = () => {
       </form>
 
       <div className={styles.productPreview}>
-        {selectedImage && (
-          <div>
-            <img className={styles.thumbnail} src={selectedImage} alt="Preview" />
-          </div>)}
+
+        {selectedImage ?
+          <img className={styles.thumbnail} src={selectedImage} alt="Preview" />
+          : <span className={`${styles.loader} ${styles.thumbnail}`}></span>
+        }
+
+        <div className={`${styles.previewProductName} ${styles.imageContainer}`}>
+          <div className={styles.imageContainerData}>
+            {(previewProduct.ProductName) != (null && '') ? `${previewProduct.ProductName}` : "نامی برای کالا وارد نشده"}
+          </div>
+
+          <div className={styles.imageGalleryContainer}>
+
+            <div>
+              <img src={SetW}/>
+
+            </div>
+
+          </div>
+        </div>
+
+        <div className={styles.previewPriceData}>
+          <p>
+            {(previewProduct.ProductPrice) != (null && '') ? `${previewProduct.ProductPrice} تومان` : " قیمتی وارد نشده"}
+          </p>
+          <p>
+            {(previewProduct.ProductAmount) != (null && '') ? `${previewProduct.ProductAmount} تا از این کالا موجود است` : " تعدای برای محصول وارد نشده"}
+          </p>
+        </div>
+
+        <div>
+          <p className={styles.previewCategory}>
+            <span>
+              {previewProduct.productCategory.categorySelected || "دسته بندی انتخاب نشده "}
+            </span>
+            <FaAngleDoubleLeft />
+            <span>
+              {previewProduct.productSubCategory.subCategorySelected || "زیر گروه انتخاب نشده "}
+            </span>
+          </p>
+        </div>
+
+        <div className={styles.previewProductName}>
+          <label>برند : </label>
+          {(previewProduct.ProductBrand) != (null && '') ? `${previewProduct.ProductBrand}` : "برندی برای کالا تعیین نشده"}
+        </div>
+
+        <div className={styles.previewProductName}>
+          <label> توضیحات : </label>
+          <textarea className={styles.previewProductName}
+            value={(previewProduct.ProducDesc) != (null && '') ? `${previewProduct.ProducDesc}` : "توضیحاتی برای کالا شرح نشده"}>
+          </textarea>
+        </div>
+
       </div>
 
       <ToastContainer

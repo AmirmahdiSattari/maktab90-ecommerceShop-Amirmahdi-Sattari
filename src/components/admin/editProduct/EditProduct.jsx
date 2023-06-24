@@ -3,12 +3,12 @@ import styles from './EditProduct.module.scss';
 import { ToastContainer, toast } from 'react-toastify';
 import { FaBackspace } from 'react-icons/fa';
 import axios from 'axios';
-import {renderComponent , setRenderComponent} from '../Context/RenderComponent'
+
 
 
 const EditProduct = (e) => {
 
-  console.log(renderComponent);
+
 
   console.log(e.data.id)
 

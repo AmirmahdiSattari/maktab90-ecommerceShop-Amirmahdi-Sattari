@@ -7,6 +7,7 @@ import {
 import { sliderData } from './slider-data';
 
 
+
 const Slider = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
     const slideLength = sliderData.length;
@@ -43,33 +44,34 @@ const Slider = () => {
 
 
     return (
-        <div className='slider'>
-            <AiOutlineArrowLeft className='arrow prev' onClick={pervSlide} />
-            <AiOutlineArrowRight className='arrow next' onClick={nextSlide} />
+        
+            <div className='slider'>
+                <AiOutlineArrowLeft className='arrow prev' onClick={pervSlide} />
+                <AiOutlineArrowRight className='arrow next' onClick={nextSlide} />
 
-            {sliderData.map((slide, index) => {
-                const { image, heading, desc } = slide
-                return (
-                    <div key={index} className={index === currentSlide ? "slide current" :
-                        "slide"}>
-                        {index === currentSlide && (
-                            <>
-                                <img src={image} alt="slide" />
-                                <div className='content'>
-                                    <h2>{heading}</h2>
-                                    <p>{desc}</p>
-                                    <hr />
-                                    <a href='#product' className='
+                {sliderData.map((slide, index) => {
+                    const { image, heading, desc } = slide
+                    return (
+                        <div key={index} className={index === currentSlide ? "slide current" :
+                            "slide"}>
+                            {index === currentSlide && (
+                                <>
+                                    <img src={image} alt="slide" />
+                                    <div className='content'>
+                                        <h2>{heading}</h2>
+                                        <p>{desc}</p>
+                                        <hr />
+                                        <a href='#product' className='
                                     --btn --btn-primary'>
-                                        خرید
-                                    </a>
-                                </div>
-                            </>
-                        )}
-                    </div>
-                )
-            })}
-        </div>
+                                            خرید
+                                        </a>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    )
+                })}
+            </div>
     )
 }
 

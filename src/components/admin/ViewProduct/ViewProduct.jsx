@@ -129,7 +129,7 @@ const ViewProduct = () => {
             <div style={{
                 height: '100%', width: '100%',
                 margin: '0 auto', boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
-                borderRadius: '5px', overflowX: 'scroll', overflowY: 'hidden'
+                borderRadius: '5px', 
             }}>
 
                 {modal && <EditProduct data={edit}></EditProduct>}
