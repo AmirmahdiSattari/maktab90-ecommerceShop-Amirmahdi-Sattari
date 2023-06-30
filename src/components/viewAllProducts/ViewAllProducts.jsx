@@ -1,39 +1,47 @@
-import React from 'react'
-import styles from './ViewAllProduct.module.scss'
+import React from 'react';
+import styles from './ViewAllProduct.module.scss';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FaWallet } from 'react-icons/fa'
+import { Link } from 'react-router-dom';
+import { Pagination, ThemeProvider } from '@mui/material';
 
 
-const ViewAllProducts = () => {
+
+const ViewAllProducts = (props) => {
+
+    const { categoryId } = props;
+    console.log(" Seleceted CategoryId in viewAll Product is  ", categoryId);
 
     const [data, setData] = useState(null);
+    const [page, setPage] = useState(1);
+    console.log(page)
 
     const handleFilterOrders = (e) => {
         console.log(e)
     }
 
-
-
     useEffect(() => {
-
-        const formData = {
-            url: `http://localhost:8000/api/products`,
-            method: 'GET',
-        }
-
-        axios(formData).then((res) => {
-
+      
+        axios(`http://localhost:8000/api/products?page=${page}`).then((res) => {
             console.log(res.data.data.products)
             setData(res.data.data.products)
-
         }).catch((err) => {
             console.log(err)
         })
 
-    }, [])
+        if (categoryId) {
+            axios(`http://localhost:8000/api/products?category=${categoryId}`).then((res) => {
+                console.log(" 👉👉 ", res)
+                setData(res.data.data.products)
+            }).catch((err) => {
+                console.log(err)
+            })
+        }
 
+        console.log("page is now:", page);
 
+    }, [page])
 
     const handleFilterViewProduct = (e) => {
 
@@ -48,19 +56,23 @@ const ViewAllProducts = () => {
 
             }).catch((err) => { console.log(err) })
         } else {
-
             axios.get(`http://localhost:8000/api/products?sort=price&quantity[gte]=10}`).then((res) => {
                 console.log(res);
-
             }).catch((err) => {
-                console.log(err)
+                console.log(err);
             })
         }
-
+    }
+    if (data != null) {
+        data.map((data) => { console.log(data.category == categoryId) })
     }
 
-    return (
+    const handleChangePage = (e) => {
+        setPage(parseInt(e.target.innerText) );
+    };
 
+
+    return (
         <section>
 
             <div className={styles.filterProductContainer}>
@@ -88,7 +100,6 @@ const ViewAllProducts = () => {
                     </li>
                 </ul>
             </div>
-
 
             <div className={styles.cardMainContainer}>
 
@@ -131,35 +142,51 @@ const ViewAllProducts = () => {
                 </div>
 
                 <div className={styles.cardContainer}>
+
                     {data &&
 
                         data.map((data) => (
-
-                            <div className={styles.card}>
-                                <div className={styles.prodcutThumbnailContainer}>
-                                    <img className={styles.prodcutThumbnail} src={`http://localhost:8000/images/products/thumbnails/${data.thumbnail}`} alt="ساعت " />
+                            (data.category == categoryId || categoryId == 'All')
+                                ?
+                                <div className={styles.card}>
+                                    <div className={styles.prodcutThumbnailContainer}>
+                                        <img className={styles.prodcutThumbnail} src={`http://localhost:8000/images/products/thumbnails/${data.thumbnail}`} alt="ساعت " />
+                                    </div>
+                                    <div className={styles.productDataContainer}>
+                                        <Link to={`/product-details/${data._id}`}>
+                                            <p className={styles.productName}> {data.name} </p>
+                                            <p className={styles.productPriceContainer}> {data.price} تومان
+                                                <span>
+                                                    <FaWallet className={styles.walletIcon} />
+                                                </span>
+                                            </p>
+                                        </Link>
+                                    </div>
                                 </div>
-                                <div className={styles.productDataContainer}>
-                                    <p className={styles.productName}> {data.name} </p>
-                                    <p className={styles.productPriceContainer}> {data.price} تومان
-                                        <span>
-                                            <FaWallet className={styles.walletIcon}/>
-                                        </span>
-                                    </p>
-                                </div>
-                            </div>
-
+                                :
+                                ''
                         ))
-
                     }
 
+                </div>
+                <div style={{
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    direction: 'ltr',
+                }}>
+                    <Pagination
+                        style={{ padding: "1rem 0" }}
+                        count={10}
+                        variant="outlined"
+                        shape="rounded"
+                        onClick={(e) => handleChangePage(e)}
+                    />
 
                 </div>
-
             </div>
 
         </section>
-
     )
 }
 

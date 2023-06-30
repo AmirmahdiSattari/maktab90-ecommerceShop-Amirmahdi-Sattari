@@ -4,13 +4,12 @@ import { ToastContainer, toast } from 'react-toastify';
 import { FaBackspace } from 'react-icons/fa';
 import axios from 'axios';
 
-
+import Spinner from '../../../assets/spinner.jpg'
 
 const EditProduct = (e) => {
 
-
-
   console.log(e.data.id)
+  console.log(e.data.row.thumbnail)
 
   const [show, setShow] = useState(true);
   const [productId, setProductId] = useState(0);
@@ -23,7 +22,6 @@ const EditProduct = (e) => {
 
   const [renderCategory, setRenderCategory] = useState(0);
 
-
   const [data, setData] = useState({
     brand: '',
     category: null,
@@ -32,10 +30,8 @@ const EditProduct = (e) => {
     price: 0,
     quantity: 0,
     subcategory: 0,
+    thumbnail: null,
   });
-
-
-
 
   const handleCloseModal = () => {
     setShow(!show);
@@ -60,8 +56,6 @@ const EditProduct = (e) => {
     setSelectedSubCategory(subCategory)
     console.log("Sub c is ", selectedSubCategory);
   }
-
-
 
   const handleValidateEditData = (e) => {
 
@@ -150,10 +144,8 @@ const EditProduct = (e) => {
       })
   }, [])
 
-
   const [price, setPrice] = useState(0);
   const [quantity, setQuantity] = useState(0);
-
 
   useEffect(() => {
     setData({
@@ -163,7 +155,8 @@ const EditProduct = (e) => {
       name: e.data.row.name,
       price: e.data.row.price,
       quantity: e.data.row.quantity,
-      subcategory: e.data.row.subcategory
+      subcategory: e.data.row.subcategory,
+      thumbnail: e.data.row.thumbnail
     });
 
     setQuantity(data.quantity);
@@ -176,7 +169,6 @@ const EditProduct = (e) => {
       console.log("no run")
     }
   }, [])
-
 
   if (renderCategory == 0) {
 
@@ -191,7 +183,6 @@ const EditProduct = (e) => {
     setRenderCategory(1)
   }
 
-
   function handlePriceChange(e) {
     setPrice(e.target.value);
   }
@@ -205,6 +196,7 @@ const EditProduct = (e) => {
       {show &&
 
         <main>
+
           <div>
 
             <div className={styles.backward}>
@@ -212,6 +204,11 @@ const EditProduct = (e) => {
             </div>
 
             <form onSubmit={(e) => handleValidateEditData(e)}>
+             
+                <div className={styles.prodcutEditThumbnailContainer}>
+                  <img src={`http://localhost:8000/images/products/thumbnails/${data.thumbnail}`} alt="ساعت " />
+                </div>
+
               <div>
                 <label>نام کالا : </label>
                 <input type='text' defaultValue={data.name} />
@@ -285,6 +282,9 @@ const EditProduct = (e) => {
 
 
           </div>
+
+
+
         </main >
       }
 

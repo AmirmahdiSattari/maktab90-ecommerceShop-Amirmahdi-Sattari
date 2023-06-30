@@ -3,7 +3,7 @@ import styles from './AddProduct.module.scss';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 import { FaAngleDoubleLeft } from 'react-icons/fa'
-import SetW from '../../../assets/SetW.jpg'
+import Spinner from '../../../assets/spinner.jpg'
 
 const AddProduct = () => {
 
@@ -16,8 +16,9 @@ const AddProduct = () => {
   const [selectedSubCategory, setSelectedSubCategory] = useState(0);
 
   const [selectedImage, setSelectedImage] = useState(null);
+  const [otherSelectedImage, setOtherSelectedImage] = useState(null);
   const [data, setData] = useState({ file: null })
-
+  const [otherData, setOtherData] = useState({ file: null })
   const handleValidateData = (e) => {
 
     e.preventDefault();
@@ -67,6 +68,7 @@ const AddProduct = () => {
 
     // If all input fields are valid, submit the form
     let productThumbnail = data.file;
+    let productOtherImage = otherData.file;
 
     const formData = new FormData();
     formData.append('category', productCategory);
@@ -77,12 +79,14 @@ const AddProduct = () => {
     formData.append('description', productDesc);
     formData.append('brand', productBrand);
     formData.append('thumbnail', productThumbnail, productThumbnail.name);
+    formData.append('images', productOtherImage, productOtherImage.name);
 
     axios.post('http://localhost:8000/api/products', formData)
       .then(response => {
         toast('اطلاعات با موفقیت ارسال شد');
         e.target.reset();
         setSelectedImage(null) // Reset the form after the request is complete
+        setOtherSelectedImage(null)
       })
       .catch(error => {
         console.error(error);
@@ -143,8 +147,14 @@ const AddProduct = () => {
     setData({ file: selectedFile });
     reader.onload = () => { setSelectedImage(reader.result); };
     reader.readAsDataURL(selectedFile);
+  };
 
-
+  const handleOtherImageChange = (event) => {
+    const selectedFile = event.target.files[0];
+    const reader = new FileReader();
+    setOtherData({ file: selectedFile });
+    reader.onload = () => { setOtherSelectedImage(reader.result); };
+    reader.readAsDataURL(selectedFile);
   };
 
   useEffect(() => {
@@ -227,13 +237,17 @@ const AddProduct = () => {
           <label> تصویر اصلی :</label>
           <input type="file" onChange={handleImageChange} />
         </div>
+        <div>
+          <label> سایر تصاویر:</label>
+          <input type="file" onChange={handleOtherImageChange} />
+        </div>
       </form>
 
       <div className={styles.productPreview}>
 
         {selectedImage ?
           <img className={styles.thumbnail} src={selectedImage} alt="Preview" />
-          : <span className={`${styles.loader} ${styles.thumbnail}`}></span>
+          : <img src={Spinner} className={`${styles.thumbnail}  ${styles.spinnerLoader}`}/>
         }
 
         <div className={`${styles.previewProductName} ${styles.imageContainer}`}>
@@ -243,8 +257,12 @@ const AddProduct = () => {
 
           <div className={styles.imageGalleryContainer}>
 
-            <div>
-              <img src={SetW}/>
+            <div className={styles.SpinnerContainer}>
+
+              {otherSelectedImage ?
+                <img src={otherSelectedImage} alt="Preview" />
+                : <img src={Spinner} />
+              }
 
             </div>
 

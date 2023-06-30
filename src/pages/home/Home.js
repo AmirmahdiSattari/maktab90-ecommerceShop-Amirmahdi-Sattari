@@ -17,7 +17,7 @@ const Home = () => {
 
       <Garanty></Garanty>
 
-      <ViewAllProducts></ViewAllProducts>
+      <ViewAllProducts categoryId={'All'}></ViewAllProducts>
 
     </div>
   );

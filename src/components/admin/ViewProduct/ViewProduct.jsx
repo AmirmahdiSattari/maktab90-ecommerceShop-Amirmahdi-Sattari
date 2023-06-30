@@ -82,7 +82,6 @@ const ViewProduct = () => {
 
     const handleDelete = (id) => {
 
-
         Swal.fire({
             title: 'آیا میخواهید محصول را حذف کنید',
             text: "این مرحله قابل بازگشت نمیباشد",
@@ -104,7 +103,6 @@ const ViewProduct = () => {
                     setRenderNewData(!renderNewData);
                 })
 
-
                 Swal.fire(
                     'تغییرات لغو شد',
                     'همه چیز به حالت قبلی بازگشت',
@@ -112,7 +110,6 @@ const ViewProduct = () => {
                 )
             }
         })
-
     };
 
     const handleEdit = (id) => {
@@ -128,8 +125,9 @@ const ViewProduct = () => {
         <ThemeProvider theme={theme}>
             <div style={{
                 height: '100%', width: '100%',
-                margin: '0 auto', boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
-                borderRadius: '5px', 
+                margin: '0 auto',
+                boxShadow: 'rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset',
+                borderRadius: '5px', overflowY: 'hidden',
             }}>
 
                 {modal && <EditProduct data={edit}></EditProduct>}
@@ -155,6 +153,10 @@ const ViewProduct = () => {
                 </div>
 
                 <DataGrid
+                    style={{
+                        paddingBottom: '3rem'
+                        , boxShadow: 'rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px'
+                    }}
                     rows={rows}
                     getRowId={getRowId}
                     columns={[
@@ -166,7 +168,7 @@ const ViewProduct = () => {
                                 <img
                                     src={`http://localhost:8000/images/products/thumbnails/${params.value}`}
                                     alt={params.value}
-                                    style={{ width: '100%', borderRadius: '15%', objectFit: 'cover', padding: '15px' }}
+                                    style={{ width: '100%', borderRadius: '15%', objectFit: 'cover', padding: '15px', }}
                                 />
                             ),
                         },
@@ -228,6 +230,7 @@ const ViewProduct = () => {
                         },
 
                     ]}
+
                     rowCount={rowCount}
                     paginationMode="server"
                     paginationModel={paginationModel}
