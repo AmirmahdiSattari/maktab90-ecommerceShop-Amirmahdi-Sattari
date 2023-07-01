@@ -49,8 +49,21 @@ const ProductOrder = () => {
         const storedOrders = JSON.parse(localStorage.getItem('orders')) || [];
 
         const updatedOrders = storedOrders.map((order) => {
-            if (order.products[0].product.id === productId) {
+            if (order.products[0].product.id === productId && order.products[0].count >= 1) {
                 order.products[0].count -= 1;
+            }
+            if (order.products[0].count == 0) {
+
+                const storedOrders = JSON.parse(localStorage.getItem('storedOrders'));
+
+                const updatedOrders = storedOrders.filter((order) => {
+                    return order.products[0].count > 0; // Only keep orders with a count greater than 0
+                });
+
+                if (updatedOrders.length !== storedOrders.length) {
+                    // An order was removed, update the storedOrders array in local storage
+                    localStorage.setItem('storedOrders', JSON.stringify(updatedOrders));
+                }
             }
             return order;
         });
@@ -97,6 +110,18 @@ const ProductOrder = () => {
 
 
     }
+
+    const handleDeleteOrder = (res) => {
+        console.log(res.target.id)
+        productData.map((data)=>{
+            console.log(data._id)
+            if(data._id == res.target.target){
+              return console.log("🟠")
+            }
+        })
+
+    }
+
     return (
         <section>
             <div className={`container ${styles.table}`}>
@@ -187,7 +212,9 @@ const ProductOrder = () => {
                                                     }
                                                 })}
                                             </td>
-                                            <td className={''}>
+                                            <td
+                                                id={res._id}
+                                                onClick={(res) => handleDeleteOrder(res)}>
                                                 <FaTrashAlt
                                                     size={19}
                                                     color="red"

@@ -7,6 +7,7 @@ import ProductDetails from './components/product/productDetails/ProductDetails';
 import ProductCategory from './components/product/productCategory/ProductCategory';
 import ProductOrder from './components/product/productOrder/ProductOrder';
 import CartForm from './pages/cart/cartForm/CartForm';
+import Payment from './components/payment/Payment';
 
 function App() {
 
@@ -25,7 +26,7 @@ function App() {
           <Route path="/categories/:categoryName" element={<ProductCategory />} />
           <Route path="/cart/" element={<ProductOrder />} />
           <Route path="/cart/contact-info" element={<CartForm />} />
-
+          <Route path="/payment" element={<Payment />} />
           <Route path="/admin/*" element={<Admin />} />
 
         </Routes>

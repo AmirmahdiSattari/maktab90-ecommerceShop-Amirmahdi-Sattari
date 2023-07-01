@@ -17,7 +17,7 @@ const Footer = () => {
 
 
     <div className={styles.footer}>
-    &copy; {year} تمام حقوق تایم جوی محفوظ میباشد
+    &copy; {year} تمام حقوق تایم جوی متعلق به آقای فاریابی میباشد ما همه وسیله ایم
     </div>
     
     

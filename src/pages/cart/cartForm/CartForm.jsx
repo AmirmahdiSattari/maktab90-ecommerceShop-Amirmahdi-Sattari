@@ -8,6 +8,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 import Spinner from '../../../assets/spinner.jpg'
+import { Link } from 'react-router-dom';
 
 let orders = localStorage.getItem('orders') ? JSON.parse(localStorage.getItem('orders')) : [];
 console.log("📌all Orders here", orders);
@@ -20,6 +21,22 @@ const CartForm = (e) => {
     function handleDeliveryDateChange(date) {
         setDeliveryDate(date);
     }
+
+
+    const [adminAccess, setAdminAccess] = useState(false);
+
+    useEffect(() => {
+        const cookies = document.cookie.split(';');
+        const adminCookie = cookies.find(cookie => cookie.trim().startsWith('admin='));
+        if (adminCookie) {
+            const [, value] = adminCookie.split('=');
+            setAdminAccess(true);
+        } else {
+            setAdminAccess(false);
+        }
+
+    }, []);
+
 
     const handleValidateData = (e) => {
 
@@ -90,11 +107,17 @@ const CartForm = (e) => {
                 console.log('Order submitted successfully:', response.data);
                 localStorage.removeItem('orders');
                 toast('اطلاعات با موفقیت ارسال شد');
+                // e.target.reset();
+                setRenderComponent(!renderComponent)
+                
+                window.location.replace('/payment');
+
             })
             .catch((error) => {
                 console.error('Error submitting order:', error);
                 toast.error('خطا در ارسال اطلاعات!');
             });
+
     }
 
     return (
@@ -105,47 +128,58 @@ const CartForm = (e) => {
                         <FaBackspace />
                     </div>
 
-                    <form onSubmit={(e) => handleValidateData(e)}>
+                    {adminAccess ?
 
-                        <div>
-                            <label> نام   : </label>
-                            <input type='text' />
+                        <form onSubmit={(e) => handleValidateData(e)}>
+
+                            <div>
+                                <label> نام   : </label>
+                                <input type='text' />
+                            </div>
+
+                            <div>
+                                <label>   نام خانوادگی: </label>
+                                <input type='text' />
+                            </div>
+                            <div>
+                                <label>  تلفن همراه </label>
+                                <input type='number' />
+                            </div>
+
+
+                            <div>
+                                <label> تاریخ تحویل : </label>
+                                <DatePicker
+                                    selected={deliveryDate}
+                                    onChange={handleDeliveryDateChange}
+                                    dateFormat="yyyy/MM/dd"
+                                    placeholderText="انتخاب تاریخ"
+                                    isRTL={true}
+                                    showMonthDropdown
+                                    showYearDropdown
+                                    dropdownMode="select"
+                                />
+                            </div>
+
+                            <div>
+                                <label> آدرس : </label>
+                                <textarea></textarea>
+                            </div>
+
+                            <div className={styles.buttonContainer}>
+                                <button className={styles.buttonAddData} type="submit"> پرداخت  </button>
+                            </div>
+
+                        </form>
+
+                        :
+                        <div>ابتدا وارد اکلنت خود شوید
+                            <Link to="/login">
+                            <span> -- ورود / ثبت نام  --</span>
+                            </Link>
                         </div>
 
-                        <div>
-                            <label>   نام خانوادگی: </label>
-                            <input type='text' />
-                        </div>
-                        <div>
-                            <label>  تلفن همراه </label>
-                            <input type='number' />
-                        </div>
-
-
-                        <div>
-                            <label> تاریخ تحویل : </label>
-                            <DatePicker
-                                selected={deliveryDate}
-                                onChange={handleDeliveryDateChange}
-                                dateFormat="yyyy/MM/dd"
-                                placeholderText="انتخاب تاریخ"
-                                isRTL={true}
-                                showMonthDropdown
-                                showYearDropdown
-                                dropdownMode="select"
-                            />
-                        </div>
-
-                        <div>
-                            <label> آدرس : </label>
-                            <textarea></textarea>
-                        </div>
-
-                        <div className={styles.buttonContainer}>
-                            <button className={styles.buttonAddData} type="submit"> پرداخت  </button>
-                        </div>
-
-                    </form>
+                    }
 
                     <ToastContainer
                         position="bottom-right"
