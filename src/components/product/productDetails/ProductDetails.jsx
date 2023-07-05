@@ -65,7 +65,7 @@ const ProductDetails = () => {
             }));
             localStorage.setItem('orders', JSON.stringify(orders));
             console.log(" 📌 here is Orders 📌 ", orders)
-        }else{
+        } else {
             console.log("no registerd")
         }
     }
@@ -96,6 +96,7 @@ const ProductDetails = () => {
                 productDescription: res.data.data.product.description,
                 productId: res.data.data.product._id,
                 productThumbnail: res.data.data.product.thumbnail,
+                productImage: res.data.data.product.images[0],
             })
 
         }).catch((err) => {
@@ -118,7 +119,15 @@ const ProductDetails = () => {
 
                     <div className={styles.img}>
 
-                        <img src={`http://localhost:8000/images/products/thumbnails/${data.productThumbnail}`} alt={''} />
+                        <div className={styles.thumbnailImage}>
+                            <img className={styles.thumbnailImage} 
+                            src={`http://localhost:8000/images/products/thumbnails/${data.productThumbnail}`}/>
+                        </div>
+
+                        <div className={styles.otherImages}>
+                            <img className={styles.otherImages}
+                            src={`http://localhost:8000/images/products/images/${data.productImage}`}/>
+                        </div>
 
                     </div>
                     <div className={styles.content}>

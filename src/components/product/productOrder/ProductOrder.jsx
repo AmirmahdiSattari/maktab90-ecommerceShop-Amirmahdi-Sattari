@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './ProductOrder.module.scss';
-import { Link, NavLink } from "react-router-dom";
-import { FaTrashAlt } from "react-icons/fa";
-import Orders from './../../admin/order/Orders';
+import { Link } from "react-router-dom";
 import axios from 'axios';
 
 const ProductOrder = () => {
@@ -51,19 +49,23 @@ const ProductOrder = () => {
         const updatedOrders = storedOrders.map((order) => {
             if (order.products[0].product.id === productId && order.products[0].count >= 1) {
                 order.products[0].count -= 1;
+                console.log("🔴", order.products[0].count)
             }
             if (order.products[0].count == 0) {
+                console.log("i run")
 
-                const storedOrders = JSON.parse(localStorage.getItem('storedOrders'));
+                const productId = order.products[0].product.id;
+                console.log("🔴productId:", productId);
 
-                const updatedOrders = storedOrders.filter((order) => {
-                    return order.products[0].count > 0; // Only keep orders with a count greater than 0
-                });
+                // Remove the order with matching product ID from local storage
+                const updatedOrders = orders.filter((order) => order.products[0].product.id !== productId);
+                localStorage.setItem('orders', JSON.stringify(updatedOrders));
 
-                if (updatedOrders.length !== storedOrders.length) {
-                    // An order was removed, update the storedOrders array in local storage
-                    localStorage.setItem('storedOrders', JSON.stringify(updatedOrders));
-                }
+                // Update the productData state to reflect the removed order
+                const updatedProductData = productData.filter((product) => product._id !== productId);
+                setProductData(updatedProductData);
+
+
             }
             return order;
         });
@@ -107,19 +109,20 @@ const ProductOrder = () => {
         localStorage.removeItem('orders');
         setProductData([])
         setRenderComponent(!renderComponent);
-
-
     }
 
-    const handleDeleteOrder = (res) => {
-        console.log(res.target.id)
-        productData.map((data)=>{
-            console.log(data._id)
-            if(data._id == res.target.target){
-              return console.log("🟠")
-            }
-        })
+    const handleDeleteOrder = (event) => {
 
+        const productId = event.target.id;
+        console.log("🔴productId:", productId);
+
+        // Remove the order with matching product ID from local storage
+        const updatedOrders = orders.filter((order) => order.products[0].product.id !== productId);
+        localStorage.setItem('orders', JSON.stringify(updatedOrders));
+
+        // Update the productData state to reflect the removed order
+        const updatedProductData = productData.filter((product) => product._id !== productId);
+        setProductData(updatedProductData);
     }
 
     return (
@@ -212,13 +215,13 @@ const ProductOrder = () => {
                                                     }
                                                 })}
                                             </td>
-                                            <td
-                                                id={res._id}
-                                                onClick={(res) => handleDeleteOrder(res)}>
-                                                <FaTrashAlt
-                                                    size={19}
-                                                    color="red"
-                                                />
+                                            <td id={res._id}
+                                                onClick={(res) => handleDeleteOrder(res)}
+                                                style={{
+                                                    cursor: 'pointer',
+                                                    color: 'red'
+                                                }}>
+                                                حذف محصول
                                             </td>
                                         </tr>
                                     );
