@@ -114,7 +114,7 @@ const CartForm = (e) => {
 
             })
             .catch((error) => {
-                console.error('Error submitting order:', error);
+                console.log('Error submitting order:', error);
                 toast.error('خطا در ارسال اطلاعات!');
             });
 

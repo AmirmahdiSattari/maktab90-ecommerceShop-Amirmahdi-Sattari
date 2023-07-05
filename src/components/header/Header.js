@@ -8,7 +8,7 @@ const logo = (
   <div className={styles.logo}>
     <Link to="/">
       <h2>
-        Time<span>Joy</span>
+        Gil<span>da</span>
       </h2>
     </Link>
   </div>

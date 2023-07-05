@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
 import { DataGrid } from '@mui/x-data-grid';
 import { ThemeProvider, createTheme, Button } from '@mui/material';
 import { purple } from '@mui/material/colors';
 import styles from './Orders.modules.scss';
-import { FaTrash, FaPenNib, FaClipboardCheck } from 'react-icons/fa'
-
-
+import { FaPenNib } from 'react-icons/fa'
+import ProductDetails from './../../product/productDetails/ProductDetails';
 
 const Orders = () => {
-
   const theme = createTheme({
     palette: {
       primary: {
@@ -31,6 +28,11 @@ const Orders = () => {
   const [rows, setRows] = useState([]);
   const [rowCount, setRowCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [showDetail, setShowDetail] = useState(false)
+  const [orderDetail, setOrderDetails] = useState(null)
+
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [renderComponent, setRenderComponent] = useState(false);
 
   const getRowId = (row) => row._id;
 
@@ -38,7 +40,6 @@ const Orders = () => {
     setLoading(true);
     axios
       .get(`http://localhost:8000/api/orders?page=${paginationModel.page + 1}`).then((res) => {
-        console.log(res);
         const products = res.data.data.orders;
         const total = res.data.totalPrice;
         setRows(products);
@@ -46,11 +47,10 @@ const Orders = () => {
         setLoading(false);
 
       });
-  }, [paginationModel.page, paginationModel.pageSize]);
+  }, [paginationModel.page, paginationModel.pageSize, renderComponent]);
 
   const handleFilterOrders = (e) => {
 
-    console.log(e)
     let status = e.target.value
 
     if (status != "All") {
@@ -63,7 +63,6 @@ const Orders = () => {
         setRows(deliverdProducts);
         setRowCount(deliverdTotal);
 
-
       }).catch((err) => { console.log(err) })
     } else {
 
@@ -75,6 +74,7 @@ const Orders = () => {
         setRowCount(total);
         setLoading(false);
 
+        console.log("🟢", rows)
       }).catch((err) => {
         console.log(err)
       })
@@ -85,38 +85,82 @@ const Orders = () => {
     console.log(e)
   }
 
-  const [showDetail, setShowDetail] = useState(false)
-  const [orderDetail, setOrderDetails] = useState(null)
 
+  const [allOrderProducts, setAllOrderProducts] = useState([]);
   const handleShowOrder = (e) => {
-    console.log(e)
-    getProductDetail(e)
-
-
-    axios(`http://localhost:8000/api/orders/649e8b34fa91b9c60a58ea87`)
+    axios(`http://localhost:8000/api/orders/${e}`)
       .then((res) => {
         const order = res.data.data.order;
-        console.log(" 📌 ", order)
         setOrderDetails([order]);
-        setShowDetail(!showDetail);
+
+        order.products.forEach((product) => {
+          axios(`http://localhost:8000/api/products/${product.product._id}`)
+            .then((res) => {
+              const productDetail = res.data.data.product;
+              setAllOrderProducts((prevProducts) => [
+                ...prevProducts,
+                productDetail,
+              ]);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        });
+
+        setShowDetail(true);
       })
       .catch((err) => {
         console.log(err);
       });
-  }
+  };
+
+  console.log(allOrderProducts);
 
   function handleGoBack() {
     setShowDetail(!showDetail)
+    setOrderDetails(null)
+    setAllOrderProducts([])
+
   }
+  const [readProduct, setReadProduct] = useState(null)
 
   const handleDeliverd = (res) => {
-    console.log("id is 🟢", res.target.id)
-  }
 
+    console.log("🟢", res.id)
+    console.log("🟠", orderDetail[0].products)
+
+    let newMap = orderDetail[0].products;
+
+    newMap.map((res) => {
+      console.log(res.product._id)
+      axios(`http://localhost:8000/api/products/${res.product._id}`).then((res) => {
+        setReadProduct(prevState => ({
+          ...prevState,
+          res
+        }))
+        console.log("🟠", readProduct)
+      }).catch((err) => {
+        console.log(err)
+      })
+    })
+
+    console.log("🔵", readProduct)
+
+    axios.patch(`http://localhost:8000/api/orders/${res.target.id}`, {
+      deliveryStatus: true,
+      deliveryDate: currentDate
+    })
+      .then((res) => {
+        setShowDetail(!showDetail)
+        setRenderComponent(!renderComponent)
+      }).catch((err) => {
+        console.log(err)
+      })
+  }
+  console.log("🔵", orderDetail)
   return (
 
     <ThemeProvider theme={theme}>
-
 
       <div style={{
         height: '100%', width: '100%',
@@ -126,11 +170,18 @@ const Orders = () => {
 
         {
           showDetail &&
-
           <div style={{
             height: '100%', width: '95%', overflowY: 'hidden'
           }}>
-            <span onClick={handleGoBack}> بازگشت </span>
+            <div onClick={handleGoBack}
+              style={{
+                height: '2%',
+                width: '10%',
+                display: 'inline-block',
+                cursor: 'pointer',
+                margin: '1rem',
+                color: 'red'
+              }}> بازگشت </div>
 
             {orderDetail.map((res) => (
 
@@ -144,15 +195,15 @@ const Orders = () => {
                 fontSize: '1.5rem',
                 padding: '1rem',
               }}>
-                <ul key={res._id} 
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: '100%',
-                 
-                }}>
+                <ul key={res._id}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+
+                  }}>
                   <li style={{
                     display: 'flex',
                     width: '60%',
@@ -168,53 +219,53 @@ const Orders = () => {
                     </span>
                   </li>
                   <li
-                  style={{
-                    display: 'flex',
-                    width: '60%',
-                    justifyContent: 'space-between',
-                    borderBottom: '1px solid rgba(0, 0, 0, 0.214)',
-                    padding: '5px 8px',
-                  }}>
+                    style={{
+                      display: 'flex',
+                      width: '60%',
+                      justifyContent: 'space-between',
+                      borderBottom: '1px solid rgba(0, 0, 0, 0.214)',
+                      padding: '5px 8px',
+                    }}>
                     <span style={{ color: 'gray', }}>
                       آدرس : </span>
                     {res.user.address}
                   </li>
                   <li
-                  style={{
-                    display: 'flex',
-                    width: '60%',
-                    justifyContent: 'space-between',
-                    borderBottom: '1px solid rgba(0, 0, 0, 0.214)',
-                    padding: '5px 8px',
-                  }}>
+                    style={{
+                      display: 'flex',
+                      width: '60%',
+                      justifyContent: 'space-between',
+                      borderBottom: '1px solid rgba(0, 0, 0, 0.214)',
+                      padding: '5px 8px',
+                    }}>
                     <span style={{ color: 'gray', }}>
                       تلفن : </span>
 
                     {res.user.phoneNumber}
                   </li>
                   <li
-                  style={{
-                    display: 'flex',
-                    width: '60%',
-                    justifyContent: 'space-between',
-                    borderBottom: '1px solid rgba(0, 0, 0, 0.214)',
-                   padding: '5px 8px',
-                  }}>
+                    style={{
+                      display: 'flex',
+                      width: '60%',
+                      justifyContent: 'space-between',
+                      borderBottom: '1px solid rgba(0, 0, 0, 0.214)',
+                      padding: '5px 8px',
+                    }}>
                     <span style={{ color: 'gray', }}>
                       زمان تخویل :</span>
                     {new Date(res.deliveryDate).toLocaleDateString('fa-IR')}
                   </li>
                   <li
-                  style={{
-                    display: 'flex',
-                    width: '60%',
-                    justifyContent: 'space-between',
-                    borderBottom: '1px solid rgba(0, 0, 0, 0.214)',
-                    padding: '5px 8px',
-                  }}>
+                    style={{
+                      display: 'flex',
+                      width: '60%',
+                      justifyContent: 'space-between',
+                      borderBottom: '1px solid rgba(0, 0, 0, 0.214)',
+                      padding: '5px 8px',
+                    }}>
                     <span style={{ color: 'gray', }}>
                       زمان سفارش :</span>
-                      {new Date(res.createdAt).toLocaleDateString('fa-IR')}
+                    {new Date(res.createdAt).toLocaleDateString('fa-IR')}
                   </li>
                 </ul>
 
@@ -263,41 +314,51 @@ const Orders = () => {
                   <tbody style={{
                     width: '90%',
                     display: 'flex',
+                    flexDirection: 'column',
                     justifyContent: 'space-evenly',
                   }}>
-                    <tr thead style={{
-                      width: '90%',
-                      display: 'flex',
-                      justifyContent: 'space-evenly',
-                      boxShadow: 'rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset',
-                    }}>
-                      <td
-                        style={{
+
+                    {allOrderProducts &&
+
+                      allOrderProducts.map((data, index) => (
+
+                        <tr thead style={{
+                          width: '90%',
                           display: 'flex',
-                          justifyContent: 'center',
-                          width: '60%',
-                          borderRight: '1px solid  rgba(0, 0, 0, 0.214)',
-                          borderLeft: '1px solid  rgba(0, 0, 0, 0.214)',
+                          justifyContent: 'space-evenly',
+                          marginBottom: '1rem',
+                          boxShadow: 'rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset',
                         }}>
-                        lorem ipsum dolor sit amet, consectetur adip
-                      </td>
-                      <td style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        width: '25%',
-                        borderLeft: '1px solid  rgba(0, 0, 0, 0.214)',
-                      }}>
-                        120,000,999
-                      </td>
-                      <td style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        width: '15%',
-                        borderLeft: '1px solid  rgba(0, 0, 0, 0.214)',
-                      }}>
-                        2
-                      </td>
-                    </tr>
+
+                          <td
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'center',
+                              width: '60%',
+                              borderRight: '1px solid  rgba(0, 0, 0, 0.214)',
+                              borderLeft: '1px solid  rgba(0, 0, 0, 0.214)',
+                            }}>
+                            {data.name}
+                          </td>
+                          <td style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            width: '25%',
+                            borderLeft: '1px solid  rgba(0, 0, 0, 0.214)',
+                          }}>
+                            {data.price}
+                          </td>
+                          <td style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            width: '15%',
+                            borderLeft: '1px solid  rgba(0, 0, 0, 0.214)',
+                          }}>
+                            {res.products[index].count}
+                          </td>
+                        </tr>
+                      ))}
+
                   </tbody>
                 </table>
 
@@ -306,7 +367,8 @@ const Orders = () => {
                     boxShadow: 'rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset',
                     padding: '.7rem 2rem',
                     border: 'none',
-                    borderRadius: '5%'
+                    borderRadius: '5%',
+                    cursor: 'pointer'
                   }}
                 >
                   تحویل شد
@@ -314,7 +376,6 @@ const Orders = () => {
               </div>
 
             ))}
-
 
           </div>
         }
@@ -372,12 +433,21 @@ const Orders = () => {
               field: 'deliveryStatus',
               headerName: ' وضیعت ارسال ',
               flex: 1,
-
+              valueFormatter: (deliveryStatus) => {
+                if (deliveryStatus.value == true) {
+                  return 'ارسال شده'
+                } else {
+                  return 'ارسال نشده'
+                }
+              }
             },
             {
               field: 'deliveryDate',
               headerName: ' زمان ارسال',
               flex: 1,
+              valueFormatter: (deliveryDate) => {
+                return new Date(deliveryDate.value).toLocaleDateString('fa-IR')
+              }
             },
             {
               field: 'delete-edit',
@@ -387,15 +457,15 @@ const Orders = () => {
                 <div>
                   <Button
                     style={{
-                      color: 'red',
+                      color: 'purple',
                       fontFamily: 'Vazirmatn'
                     }}
                     onClick={() => handleShowOrder(params.id)}>
-                    <FaTrash style={{
+                    <FaPenNib style={{
                       opacity: '.7',
                       marginLeft: '5'
                     }} />
-                    حذف
+                    ویرایش
                   </Button>
 
                 </div>
@@ -416,6 +486,5 @@ const Orders = () => {
     </ThemeProvider >
   );
 }
-
 
 export default Orders
